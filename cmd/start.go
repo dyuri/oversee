@@ -23,6 +23,31 @@ type Process struct {
 }
 
 
+// TODO refactor
+type Logger struct {
+	Name string
+}
+
+func (l *Logger) Debug(msg string, v ...interface{}) {
+	msg = "[" + l.Name + "] " + msg
+	log.Debugf(msg, v...)
+}
+
+func (l *Logger) Info(msg string, v ...interface{}) {
+	msg = "[" + l.Name + "] " + msg
+	log.Infof(msg, v...)
+}
+
+func (l *Logger) Warn(msg string, v ...interface{}) {
+	msg = "[" + l.Name + "] " + msg
+	log.Warnf(msg, v...)
+}
+
+func (l *Logger) Error(msg string, v ...interface{}) {
+	msg = "[" + l.Name + "] " + msg
+	log.Errorf(msg, v...)
+}
+
 func parseProcesses(apps []interface{}) []Process {
 	configApps := viper.Get("apps")
 	processes := make([]Process, 0)
@@ -46,11 +71,11 @@ func parseProcesses(apps []interface{}) []Process {
 				process.Env = append(process.Env, e.(string))
 			}
 		}
-		if delay, ok := app["delay"].(uint); ok {
-			process.Delay = delay
+		if delay, ok := app["delay"].(int); ok {
+			process.Delay = uint(delay)
 		}
-		if retry, ok := app["retry"].(uint); ok {
-			process.Retry = retry
+		if retry, ok := app["retry"].(int); ok {
+			process.Retry = uint(retry)
 		}
 
 		if process.Name != "" && process.Cmd != "" {
@@ -95,6 +120,10 @@ var startCmd = &cobra.Command{
 		processes := parseProcesses(viper.Get("apps").([]interface{}))
 
 		log.Debug("Processes", "processes", processes)
+
+		overseer.SetupLogBuilder(func(name string) overseer.Logger {
+			return &Logger{Name: name}
+		})
 
 		ovr := overseer.NewOverseer()
 

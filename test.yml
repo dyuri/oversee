@@ -1,4 +1,6 @@
 apps:
   - name: ls
     cmd: ls -la
+    retry: 3
+    delay: 1000
 
