@@ -3,6 +3,8 @@ package cmd
 import (
 	"github.com/dyuri/oversee/log"
 	"github.com/dyuri/oversee/config"
+	"github.com/dyuri/oversee/proc"
+	"github.com/dyuri/oversee/ui"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -21,6 +23,12 @@ var rootCmd = &cobra.Command{
 		config.UpdateApps(appFile)
 
 		return err
+	},
+	Run: func(cmd *cobra.Command, args []string) {
+		processes := config.ParseProcesses()
+		proc.InitProcesses(processes)
+
+		ui.StartUI()
 	},
 }
 

@@ -31,8 +31,6 @@ func init() {
 
 func InitProcesses(processes []Process) {
 	for _, process := range processes {
-		log.Info("Starting process %s [%s]", process.Name, process.Cmd)
-
 		args, err := quote.Split(process.Cmd)
 		if err != nil {
 			log.Warn("Error parsing command [%s]: %s", process.Cmd, err)
@@ -63,6 +61,10 @@ func InitProcesses(processes []Process) {
 			continue
 		}
 	}
+}
+
+func GetOverseer() *overseer.Overseer {
+	return ovr
 }
 
 func SuperviseAll() {

@@ -7,6 +7,7 @@ import (
 // TODO file based
 // TODO log rotation
 // TODO Attrs support https://github.com/ShinyTrinkets/meta-logger/blob/master/default.go
+// TODO ui support
 
 var DefaultLogger = &Logger{Name: "default"}
 
